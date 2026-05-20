@@ -13,13 +13,15 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   int _selectedIndex = 0;
+  final DateTime _selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}'),
+          toolbarHeight: 90, 
+          title: Text('${_selectedDate.month}/${_selectedDate.day}/${_selectedDate.year}'),
           centerTitle: true,
         ),
         body: const Center(child: Text('Hello World!')),
