@@ -12,27 +12,49 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  int _selectedIndex = 0;
   final DateTime _selectedDate = DateTime.now();
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: _navigatorKey,
       home: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 90, 
-          title: Text('${_selectedDate.month}/${_selectedDate.day}/${_selectedDate.year}'),
+          toolbarHeight: 90,
+          title: Text(
+            '${_selectedDate.month}/${_selectedDate.day}/${_selectedDate.year}',
+          ),
           centerTitle: true,
         ),
         body: const Center(child: Text('Hello World!')),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: (index) => setState(() => _selectedIndex = index),
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Config'),
-            BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'Agregar'),
-            BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Calendario'),
-          ],
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _navigatorKey.currentState?.push(
+              MaterialPageRoute<void>(
+                builder: (context) => const AddTask(),
+              ),
+            );
+          },
+          child: const Icon(Icons.add),
+        ),
+      ),
+    );
+  }
+}
+class AddTask extends StatelessWidget {
+  const AddTask({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('add task')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Go back!'),
         ),
       ),
     );
