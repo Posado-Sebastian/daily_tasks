@@ -38,4 +38,25 @@ class DbHelper {
       for (final map in taskMaps) Task.fromMap(map)
     ];
   }
+
+  static Future<void> deleteTask(int id) async {
+    final db = await openOurDatabase();
+    
+    await db.delete(
+      'tasks',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  static Future<void> updateTask(Task task) async {
+    final db = await openOurDatabase();
+    
+    await db.update(
+      'tasks',
+      task.toMap(),
+      where: 'id = ?',
+      whereArgs: [task.id],
+    );
+  }
 }
