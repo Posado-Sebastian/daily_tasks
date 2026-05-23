@@ -15,7 +15,7 @@ class TaskLog {
     return {
       if (id != null) 'id': id,
       'taskId': taskId,
-      'date': date.toIso8601String(),
+      'date': DateTime(date.year, date.month, date.day).toIso8601String(),
       'status': status,
     };
   }

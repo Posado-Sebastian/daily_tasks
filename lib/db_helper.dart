@@ -114,12 +114,32 @@ class DbHelper {
 
 	static Future<void> insertOrUpdateTaskLog(TaskLog taskLog) async {
 		final db = await openOurDatabase();
+		final normalizedDate = DateTime(
+			taskLog.date.year,
+			taskLog.date.month,
+			taskLog.date.day,
+		).toIso8601String();
 
-		await db.insert(
+		final values = {
+			'taskId': taskLog.taskId,
+			'date': normalizedDate,
+			'status': taskLog.status,
+		};
+
+		final updatedRows = await db.update(
 			_taskLogsTable,
-			taskLog.toMap(),
-			conflictAlgorithm: ConflictAlgorithm.replace,
+			values,
+			where: 'taskId = ? AND date = ?',
+			whereArgs: [taskLog.taskId, normalizedDate],
 		);
+
+		if (updatedRows == 0) {
+			await db.insert(
+				_taskLogsTable,
+				values,
+				conflictAlgorithm: ConflictAlgorithm.abort,
+			);
+		}
 	}
 
 	static Future<TaskLog?> getTaskLogForDate(int taskId, DateTime date) async {
