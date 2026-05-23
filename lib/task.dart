@@ -2,15 +2,13 @@ class Task {
   final int? id;  
   final String title;
   final List<String> days;
-  final DateTime? startDate;
-  final DateTime? endDate;
+  final bool isActive;
 
   Task({
     this.id,
     required this.title,
     required this.days,
-    this.startDate,
-    this.endDate,
+    this.isActive = true,
   });
 
   Map<String, Object?> toMap() {
@@ -18,8 +16,7 @@ class Task {
       if (id != null) 'id': id,
       'title': title,
       'days': days.join(','),
-      'startDate': startDate?.toIso8601String(),
-      'endDate': endDate?.toIso8601String(),
+      'isActive': isActive ? 1 : 0,
     };
   }
 
@@ -30,12 +27,7 @@ class Task {
       days: map['days'] == null || (map['days'] as String).isEmpty
           ? []
           : (map['days'] as String).split(','),
-      startDate: map['startDate'] == null
-          ? null
-          : DateTime.parse(map['startDate'] as String),
-      endDate: map['endDate'] == null
-          ? null
-          : DateTime.parse(map['endDate'] as String),
+      isActive: map['isActive'] == 1,
     );
   }
 }

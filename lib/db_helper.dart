@@ -31,8 +31,7 @@ class DbHelper {
 				id INTEGER PRIMARY KEY AUTOINCREMENT,
 				title TEXT NOT NULL,
 				days TEXT NOT NULL,
-				startDate TEXT,
-				endDate TEXT
+				isActive INTEGER NOT NULL DEFAULT 1
 			)
 		''');
 
@@ -90,25 +89,9 @@ class DbHelper {
 		final allTasks = await getTasks();
 		final dayNames = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 		final dayCode = dayNames[date.weekday % 7];
-		final normalizedDate = DateTime(date.year, date.month, date.day);
 
 		return allTasks.where((task) {
-			final startsBeforeOrToday = task.startDate == null ||
-					!DateTime(
-						task.startDate!.year,
-						task.startDate!.month,
-						task.startDate!.day,
-					).isAfter(normalizedDate);
-			final endsAfterOrToday = task.endDate == null ||
-					!DateTime(
-						task.endDate!.year,
-						task.endDate!.month,
-						task.endDate!.day,
-					).isBefore(normalizedDate);
-
-			return startsBeforeOrToday &&
-					endsAfterOrToday &&
-					task.days.contains(dayCode);
+			return task.isActive && task.days.contains(dayCode);
 		}).toList();
 	}
 

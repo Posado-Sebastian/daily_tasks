@@ -98,7 +98,6 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                     days: _selectedDays.isEmpty
                         ? List.from(_weekDays)
                         : _selectedDays.toList(),
-                    startDate: DateTime.now(),
                   );
                   await DbHelper.insertTask(task);
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
