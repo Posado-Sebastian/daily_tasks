@@ -1,36 +1,112 @@
 import 'package:flutter/material.dart';
+import 'task.dart';
+import 'db_helper.dart';
 
-class BottomSheetWidget extends StatelessWidget {
+class BottomSheetWidget extends StatefulWidget {
   const BottomSheetWidget({super.key});
 
   @override
+  State<BottomSheetWidget> createState() => _BottomSheetWidgetState();
+}
+
+class _BottomSheetWidgetState extends State<BottomSheetWidget> {
+  final TextEditingController _titleController = TextEditingController();  
+  final List<String> _weekDays = const ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+  final Set<String> _selectedDays = <String>{};
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        child: const Text('showModalBottomSheet'),
-        onPressed: () {
-          showModalBottomSheet<void>(
-            context: context,
-            builder: (BuildContext context) {
-              return SizedBox(
-                height: 200,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: .center,
-                    mainAxisSize: .min,
-                    children: <Widget>[
-                      const Text('Modal BottomSheet'),
-                      ElevatedButton(
-                        child: const Text('Close BottomSheet'),
-                        onPressed: () => Navigator.pop(context),
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        top: 16,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'New Task',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: _titleController,
+              autofocus: false,
+              decoration: const InputDecoration(
+                labelText: 'Title',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                for (final day in _weekDays)
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 3),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(500),
+                        onTap: () {
+                          setState(() {
+                            if (_selectedDays.contains(day)) {
+                              _selectedDays.remove(day);
+                            } else {
+                              _selectedDays.add(day);
+                            }
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 150),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(
+                            color: _selectedDays.contains(day)
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(500),
+                          ),
+                          child: Text(
+                            day,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              );
-            },
-          );
-        },
+              ],
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  final snackBar = SnackBar(
+                    content: const Text('task added'),
+                  );
+                  final task = Task(
+                    title: _titleController.text,
+                    isCompleted: false,
+                    days: _selectedDays.isEmpty ? List.from(_weekDays) : _selectedDays.toList(),
+                  );
+                  await DbHelper.insertTask(task);
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.save),
+                label: const Text('Save Task'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
