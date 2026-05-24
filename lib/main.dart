@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
 import 'tasks_manager.dart';
+import 'stats.dart';
 
 void main() {
   runApp(const MainApp());
@@ -26,9 +27,10 @@ class RootScreen extends StatefulWidget {
 }
 
 class _RootScreenState extends State<RootScreen> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   static const List<Widget> _screens = [
+    Stats(),
     Home(),
     TasksManager(),
   ];
@@ -45,6 +47,11 @@ class _RootScreenState extends State<RootScreen> {
           });
         },
         destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.bar_chart_outlined),
+            selectedIcon: Icon(Icons.bar_chart),
+            label: 'Stats',
+          ),
           NavigationDestination(
             icon: Icon(Icons.today_outlined),
             selectedIcon: Icon(Icons.today),

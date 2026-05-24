@@ -41,7 +41,7 @@ class _TasksManagerState extends State<TasksManager> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 90,
+        toolbarHeight: 80,
         title: const Text('Tasks'),
         centerTitle: true,
       ),
