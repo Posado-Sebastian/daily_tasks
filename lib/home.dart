@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'bottomsheet.dart';
 import 'db_helper.dart';
 import 'task.dart';
 import 'task_log.dart';
@@ -40,11 +39,23 @@ class _HomeState extends State<Home> {
   Future<void> _loadTasks() async {
     final tasks = await DbHelper.getTasksForDate(DateTime.now());
     final Map<int, TaskLog?> logs = {};
+    final today = DateTime.now();
+
     for (final task in tasks) {
-      logs[task.id!] = await DbHelper.getTaskLogForDate(
-        task.id!,
-        DateTime.now(),
-      );
+      final taskId = task.id!;
+      final existingLog = await DbHelper.getTaskLogForDate(taskId, today);
+
+      if (existingLog == null) {
+        final skippedLog = TaskLog(
+          taskId: taskId,
+          date: today,
+          status: 'skipped',
+        );
+        await DbHelper.insertOrUpdateTaskLog(skippedLog);
+        logs[taskId] = skippedLog;
+      } else {
+        logs[taskId] = existingLog;
+      }
     }
 
     final List<Task> pendingTasks = [];
@@ -180,19 +191,7 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (BuildContext context) {
-              return const BottomSheetWidget();
-            },
-          );
-          _loadTasks();
-        },
-        child: const Icon(Icons.add),
-      ),
+      
     );
   }
 }
