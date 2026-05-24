@@ -15,6 +15,7 @@ class _HomeState extends State<Home> {
   List<Task> _tasks = [];
   Map<int, TaskLog?> _todayLogs = {};
 
+
   @override
   void initState() {
     super.initState();
@@ -38,7 +39,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 90,
-        title: const Text('Home'),
+        title: Text('${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}'),
         centerTitle: true,
       ),
       body: _tasks.isEmpty

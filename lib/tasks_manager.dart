@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'bottomsheet.dart';
 import 'db_helper.dart';
 import 'task.dart';
 
@@ -25,6 +26,17 @@ class _TasksManagerState extends State<TasksManager> {
     });
   }
 
+  Future<void> _openEditBottomSheet(Task task) async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return BottomSheetWidget(task: task);
+      },
+    );
+    _loadTasks();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,31 +45,32 @@ class _TasksManagerState extends State<TasksManager> {
         title: const Text('Tasks'),
         centerTitle: true,
       ),
-      body: _tasks.isEmpty
-          ? const Center(child: Text('No tasks yet'))
+      body: _tasks.isEmpty 
+          ? const Center(child: Text('No tasks yet')) 
           : ListView.builder(
-              itemCount: _tasks.length,
-              itemBuilder: (context, index) {
-                final task = _tasks[index];
-                return ListTile(
-                  title: Text(task.title),
-                  subtitle: Text(task.days.join(', ')),
-                  trailing: Switch(
-                    value: task.isActive,
-                    onChanged: (value) async {
-                      final updated = Task(
-                        id: task.id,
-                        title: task.title,
-                        days: task.days,
-                        isActive: value,
-                      );
-                      await DbHelper.updateTask(updated);
-                      _loadTasks();
-                    },
-                  ),
-                );
-              },
-            ),
+            itemCount: _tasks.length,
+            itemBuilder: (context, index) {
+              final task = _tasks[index];
+              return ListTile(
+                onTap: () => _openEditBottomSheet(task),
+                title: Text(task.title),
+                subtitle: Text(task.days.join(', ')),
+                trailing: Switch(
+                  value: task.isActive,
+                  onChanged: (value) async {
+                    final updated = Task(
+                      id: task.id,
+                      title: task.title,
+                      days: task.days,
+                      isActive: value,
+                    );
+                    await DbHelper.updateTask(updated);
+                    _loadTasks();
+                  },
+                ),
+              );
+            },
+          ),
     );
   }
 }
