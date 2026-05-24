@@ -15,6 +15,9 @@ class _HomeState extends State<Home> {
   List<Task> _tasks = [];
   Map<int, TaskLog?> _todayLogs = {};
 
+  bool _isTaskDone(Task task) {
+    return _todayLogs[task.id]?.status == 'done';
+  }
 
   @override
   void initState() {
@@ -28,8 +31,19 @@ class _HomeState extends State<Home> {
     for (final task in tasks) {
       logs[task.id!] = await DbHelper.getTaskLogForDate(task.id!, DateTime.now());
     }
+
+    final List<Task> pendingTasks = [];
+    final List<Task> completedTasks = [];
+    for (final task in tasks) {
+      if (logs[task.id]?.status == 'done') {
+        completedTasks.add(task);
+      } else {
+        pendingTasks.add(task);
+      }
+    }
+
     setState(() {
-      _tasks = tasks;
+      _tasks = [...pendingTasks, ...completedTasks];
       _todayLogs = logs;
     });
   }
@@ -48,20 +62,59 @@ class _HomeState extends State<Home> {
               itemCount: _tasks.length,
               itemBuilder: (context, index) {
                 final task = _tasks[index];
-                return ListTile(
-                  title: Text(task.title),
-                  leading: Checkbox(
-                    value: _todayLogs[task.id]?.status == 'done',
-                    onChanged: (value) async {
-                      final log = TaskLog(
-                        taskId: task.id!,
-                        date: DateTime.now(),
-                        status: (value ?? false) ? 'done' : 'skipped',
-                      );
-                      await DbHelper.insertOrUpdateTaskLog(log);
-                      _loadTasks();
-                    },
-                  ),
+                final isDone = _isTaskDone(task);
+                final firstDoneIndex = _tasks.indexWhere(_isTaskDone);
+                final shouldShowSeparator =
+                    firstDoneIndex > 0 && index == firstDoneIndex;
+
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (shouldShowSeparator)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                        child: Container(
+                          height: 2,
+                          decoration: BoxDecoration(
+                            color: Colors.black26,
+                            borderRadius: BorderRadius.circular(999),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 8,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ListTile(
+                      title: Text(
+                        task.title,
+                        style: TextStyle(
+                          decoration: isDone
+                              ? TextDecoration.lineThrough
+                              : TextDecoration.none,
+                          color: isDone ? Colors.black54 : null,
+                        ),
+                      ),
+                      leading: Checkbox(
+                        value: isDone,
+                        onChanged: (value) async {
+                          final log = TaskLog(
+                            taskId: task.id!,
+                            date: DateTime.now(),
+                            status: (value ?? false) ? 'done' : 'skipped',
+                          );
+                          await DbHelper.insertOrUpdateTaskLog(log);
+                          _loadTasks();
+                        },
+                      ),
+                    ),
+                  ],
                 );
               },
             ),
