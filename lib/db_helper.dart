@@ -22,9 +22,6 @@ class DbHelper {
 			onCreate: (db, version) async {
 				await _createSchema(db);
 			},
-			onUpgrade: (db, oldVersion, newVersion) async {
-				await _upgradeSchema(db, oldVersion, newVersion);
-			},
 		);
 	}
 
@@ -49,18 +46,6 @@ class DbHelper {
 				FOREIGN KEY(taskId) REFERENCES $_tasksTable(id) ON DELETE CASCADE
 			)
 		''');
-	}
-
-	static Future<void> _upgradeSchema(
-		Database db,
-		int oldVersion,
-		int newVersion,
-	) async {
-		if (oldVersion < 3) {
-			await db.execute(
-				'ALTER TABLE $_tasksTable ADD COLUMN specificDate TEXT',
-			);
-		}
 	}
 
 	static Future<int> insertTask(Task task) async {

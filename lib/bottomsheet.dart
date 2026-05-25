@@ -246,7 +246,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: _saveTask,
