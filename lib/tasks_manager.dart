@@ -54,7 +54,7 @@ class _TasksManagerState extends State<TasksManager> {
               return ListTile(
                 onTap: () => _openEditBottomSheet(task),
                 title: Text(task.title),
-                subtitle: Text(task.days.join(', ')),
+                subtitle: Text(task.scheduleLabel),
                 trailing: Switch(
                   value: task.isActive,
                   onChanged: (value) async {
@@ -62,6 +62,7 @@ class _TasksManagerState extends State<TasksManager> {
                       id: task.id,
                       title: task.title,
                       days: task.days,
+                      specificDate: task.specificDate,
                       isActive: value,
                     );
                     await DbHelper.updateTask(updated);

@@ -5,7 +5,7 @@ import 'task_log.dart';
 
 class DbHelper {
 	static const _databaseName = 'todo_list.db';
-	static const _databaseVersion = 2;
+	static const _databaseVersion = 3;
 	static const _tasksTable = 'tasks';
 	static const _taskLogsTable = 'task_logs';
 
@@ -22,6 +22,9 @@ class DbHelper {
 			onCreate: (db, version) async {
 				await _createSchema(db);
 			},
+			onUpgrade: (db, oldVersion, newVersion) async {
+				await _upgradeSchema(db, oldVersion, newVersion);
+			},
 		);
 	}
 
@@ -31,6 +34,7 @@ class DbHelper {
 				id INTEGER PRIMARY KEY AUTOINCREMENT,
 				title TEXT NOT NULL,
 				days TEXT NOT NULL,
+				specificDate TEXT,
 				isActive INTEGER NOT NULL DEFAULT 1
 			)
 		''');
@@ -45,6 +49,18 @@ class DbHelper {
 				FOREIGN KEY(taskId) REFERENCES $_tasksTable(id) ON DELETE CASCADE
 			)
 		''');
+	}
+
+	static Future<void> _upgradeSchema(
+		Database db,
+		int oldVersion,
+		int newVersion,
+	) async {
+		if (oldVersion < 3) {
+			await db.execute(
+				'ALTER TABLE $_tasksTable ADD COLUMN specificDate TEXT',
+			);
+		}
 	}
 
 	static Future<int> insertTask(Task task) async {
@@ -87,11 +103,9 @@ class DbHelper {
 
 	static Future<List<Task>> getTasksForDate(DateTime date) async {
 		final allTasks = await getTasks();
-		final dayNames = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-		final dayCode = dayNames[date.weekday % 7];
 
 		return allTasks.where((task) {
-			return task.isActive && task.days.contains(dayCode);
+			return task.appliesToDate(date);
 		}).toList();
 	}
 
