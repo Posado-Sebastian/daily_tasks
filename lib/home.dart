@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'db_helper.dart';
 import 'task.dart';
 import 'task_log.dart';
+import 'bottomsheet.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -191,7 +192,19 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (BuildContext context) {
+              return const BottomSheetWidget();
+            },
+          );
+          _loadTasks();
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }

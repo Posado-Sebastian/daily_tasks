@@ -72,19 +72,6 @@ class _TasksManagerState extends State<TasksManager> {
               );
             },
           ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (BuildContext context) {
-              return const BottomSheetWidget();
-            },
-          );
-          _loadTasks();
-        },
-        child: const Icon(Icons.add),
-      ),
     );
   }
 }
