@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'task.dart'; 
-import 'task_log.dart';  
+import 'models/task.dart'; 
+import 'models/task_log.dart';  
 
 class DbHelper {
 	static const _databaseName = 'todo_list.db';

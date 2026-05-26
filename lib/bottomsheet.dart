@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'db_helper.dart';
-import 'task.dart';
+import 'models/task.dart';
 
 class BottomSheetWidget extends StatefulWidget {
   final Task? task;

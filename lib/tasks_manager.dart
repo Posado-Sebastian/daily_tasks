@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'bottomsheet.dart';
 import 'db_helper.dart';
-import 'task.dart';
+import 'models/task.dart';
 
 class TasksManager extends StatefulWidget {
   const TasksManager({super.key});

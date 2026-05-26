@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'db_helper.dart';
-import 'task.dart';
-import 'task_log.dart';
+import 'models/task.dart';
+import 'models/task_log.dart';
 import 'bottomsheet.dart';
 
 class Home extends StatefulWidget {
