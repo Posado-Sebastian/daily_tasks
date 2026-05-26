@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'db_helper.dart';
 import 'models/day_stats.dart';
-import 'widgets/weekly_donut_chart.dart';
-import 'widgets/weekly_bar_chart.dart';
+import 'charts/weekly_donut_chart.dart';
+import 'charts/weekly_bar_chart.dart';
 
 
 class Stats extends StatefulWidget {
