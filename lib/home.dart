@@ -77,6 +77,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final completedToday = _completedTasksCount;
     final totalToday = _tasks.length;
     final progress = _progressValue;
@@ -150,7 +151,7 @@ class _HomeState extends State<Home> {
                               child: Container(
                                 height: 2,
                                 decoration: BoxDecoration(
-                                  color: Colors.black26,
+                                  color: const Color.fromARGB(66, 255, 255, 255),
                                   borderRadius: BorderRadius.circular(999),
                                   boxShadow: const [
                                     BoxShadow(
@@ -169,7 +170,9 @@ class _HomeState extends State<Home> {
                                 decoration: isDone
                                     ? TextDecoration.lineThrough
                                     : TextDecoration.none,
-                                color: isDone ? Colors.black54 : null,
+                                color: isDone
+                                    ? colorScheme.onSurfaceVariant
+                                    : colorScheme.onSurface,
                               ),
                             ),
                             leading: Checkbox(
