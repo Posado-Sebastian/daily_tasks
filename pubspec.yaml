@@ -1,5 +1,5 @@
 name: daily_tasks
-description: "A new Flutter project."
+description: "App to manage recurring daily tasks and track your completion history."
 publish_to: 'none'
 version: 0.1.0+1
 
@@ -13,6 +13,7 @@ dependencies:
   path: ^1.9.0
   shared_preferences: ^2.5.3
   fl_chart: ^0.70.2
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -21,3 +22,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon.png"
+  adaptive_icon_background: "#0f1513"
+  adaptive_icon_foreground: "assets/icon.png"
