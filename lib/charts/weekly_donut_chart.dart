@@ -51,7 +51,7 @@ class WeeklyDonutChart extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Last 7 days',
+              'Weekly Completion',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 18),

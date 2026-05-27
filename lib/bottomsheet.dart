@@ -28,6 +28,10 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
 
   bool get _isEditing => widget.task != null;
 
+  List<String> get _orderedSelectedDays {
+    return _weekDays.where(_selectedDays.contains).toList();
+  }
+
   String get _selectedDateLabel {
     if (_selectedDate == null) {
       return 'No date selected';
@@ -75,6 +79,16 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
       return;
     }
 
+    if (_scheduleType == ScheduleType.weekDays && _selectedDays.isEmpty) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Select at least one day')),
+      );
+      return;
+    }
+
     if (_scheduleType == ScheduleType.specificDate && _selectedDate == null) {
       return;
     }
@@ -83,7 +97,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
       id: widget.task?.id,
       title: _titleController.text.trim(),
       days: _scheduleType == ScheduleType.weekDays
-          ? (_selectedDays.isEmpty ? List.from(_weekDays) : _selectedDays.toList())
+          ? _orderedSelectedDays
           : const [],
       specificDate:
           _scheduleType == ScheduleType.specificDate ? _selectedDate : null,
