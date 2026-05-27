@@ -12,5 +12,5 @@ A Flutter app to manage recurring daily tasks and track your completion history.
 
 - Flutter (Dart)
 - SQLite via `sqflite`
-- `shared_preferences` for lightweight local storage
-- Supports Android, iOS, Linux, macOS, Windows, and Web
+- Fl Chart
+- Supports Android and iOS
