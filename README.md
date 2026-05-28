@@ -8,6 +8,14 @@ A Flutter app to manage recurring daily tasks and track your completion history.
 - **Task manager** — create, edit, and delete tasks. Assign them to specific days of the week and toggle them active/inactive.
 - **Stats view** — review your task history with done/skipped logs per day.
 
+## Screenshots
+
+<p float="left">
+  <img src="assets/manager.jpeg" width="250">
+  <img src="assets/stats.jpeg" width="250">
+  <img src="assets/tasks.jpeg" width="250">
+</p>
+
 ## Tech stack
 
 - Flutter (Dart)

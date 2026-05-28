@@ -80,13 +80,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
     }
 
     if (_scheduleType == ScheduleType.weekDays && _selectedDays.isEmpty) {
-      if (!mounted) {
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Select at least one day')),
-      );
-      return;
+      _selectedDays.addAll(_weekDays);
     }
 
     if (_scheduleType == ScheduleType.specificDate && _selectedDate == null) {
@@ -217,7 +211,15 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                           ).colorScheme.surfaceContainerHighest,
                                     borderRadius: BorderRadius.circular(500),
                                   ),
-                                  child: Text(day, textAlign: TextAlign.center),
+                                  child: Text(
+                                    day,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: _selectedDays.contains(day)
+                                          ? Colors.black
+                                          : null,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
