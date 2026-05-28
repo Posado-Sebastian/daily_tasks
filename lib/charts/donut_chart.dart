@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-class WeeklyDonutChart extends StatelessWidget {
+class DonutChart extends StatelessWidget {
   final int doneCount;
   final int skippedCount;
+  final String title;
 
-  const WeeklyDonutChart({
+  const DonutChart({
     super.key,
     required this.doneCount,
     required this.skippedCount,
+    required this.title,
   });
 
   int get _total => doneCount + skippedCount;
@@ -50,9 +52,9 @@ class WeeklyDonutChart extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Weekly Completion',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 18),
             if (total == 0)

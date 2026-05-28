@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'db_helper.dart';
 import 'models/day_stats.dart';
-import 'charts/weekly_donut_chart.dart';
-import 'charts/weekly_bar_chart.dart';
+import 'charts/donut_chart.dart';
+import 'charts/bar_chart.dart';
 
 
 class Stats extends StatefulWidget {
@@ -17,28 +17,29 @@ class _StatsState extends State<Stats> {
   int _doneCount = 0;
   int _skippedCount = 0;
   List<DayStats> _dailyStats = [];
+  int _selectedDays = 7;
 
   @override
   void initState() {
     super.initState();
-    _loadWeeklyStats();
+    _loadStats();
   }
 
-  Future<void> _loadWeeklyStats() async {
+  Future<void> _loadStats() async {
+    setState(() => _isLoading = true);
+
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final endDate = today.subtract(const Duration(days: 1));
-    final startDate = endDate.subtract(const Duration(days: 6));
+    final startDate = endDate.subtract(Duration(days: _selectedDays - 1));
 
     final logs = await DbHelper.getLogsBetweenDates(startDate, endDate);
 
-    // Calculate total counts
     int totalDone = 0;
     int totalSkipped = 0;
 
-    // Build daily stats
     final dailyMap = <DateTime, DayStats>{};
-    for (var i = 0; i < 7; i++) {
+    for (var i = 0; i < _selectedDays; i++) {
       final date = startDate.add(Duration(days: i));
       dailyMap[date] = DayStats(date: date, done: 0, skipped: 0);
     }
@@ -92,12 +93,25 @@ class _StatsState extends State<Stats> {
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 child: Column(
                   children: [
-                    WeeklyDonutChart(
+                    SegmentedButton<int>(
+                      segments: const [
+                        ButtonSegment(value: 7, label: Text('7 days')),
+                        ButtonSegment(value: 30, label: Text('30 days')),
+                      ],
+                      selected: {_selectedDays},
+                      onSelectionChanged: (selection) {
+                        setState(() => _selectedDays = selection.first);
+                        _loadStats();
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    DonutChart(
                       doneCount: _doneCount,
                       skippedCount: _skippedCount,
+                      title: _selectedDays == 7 ? 'Weekly Completion' : '30-Day Completion',
                     ),
-                    const SizedBox(height: 16),
-                    WeeklyBarChart(dailyStats: _dailyStats),
+                    const SizedBox(height: 8),
+                    BarChart(dailyStats: _dailyStats),
                   ],
                 ),
               ),

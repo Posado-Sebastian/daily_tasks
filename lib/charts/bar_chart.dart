@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
+import 'package:fl_chart/fl_chart.dart' as fl;
 import '../models/day_stats.dart';
 
-class WeeklyBarChart extends StatelessWidget {
+class BarChart extends StatelessWidget {
   final List<DayStats> dailyStats;
 
-  const WeeklyBarChart({super.key, required this.dailyStats});
+  const BarChart({super.key, required this.dailyStats});
 
-  List<BarChartGroupData> _buildGroups(Color doneColor) {
+  bool get _isLargePeriod => dailyStats.length > 7;
+
+  List<fl.BarChartGroupData> _buildGroups(Color doneColor) {
+    final barWidth = _isLargePeriod ? 6.0 : 12.0;
     return List.generate(dailyStats.length, (index) {
-      return BarChartGroupData(
+      return fl.BarChartGroupData(
         x: index,
         barRods: [
-          BarChartRodData(
+          fl.BarChartRodData(
             toY: dailyStats[index].percentage,
             color: doneColor,
-            width: 12,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+            width: barWidth,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(3)),
           ),
         ],
       );
@@ -49,36 +52,43 @@ class WeeklyBarChart extends StatelessWidget {
             else
               SizedBox(
                 height: 240,
-                child: BarChart(
-                  BarChartData(
+                child: fl.BarChart(
+                  fl.BarChartData(
                     barGroups: _buildGroups(doneColor),
                     maxY: 100,
-                    titlesData: FlTitlesData(
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
+                    titlesData: fl.FlTitlesData(
+                      bottomTitles: fl.AxisTitles(
+                        sideTitles: fl.SideTitles(
                           showTitles: true,
                           getTitlesWidget: (value, meta) {
                             final index = value.toInt();
                             if (index < 0 || index >= dailyStats.length) {
                               return const SizedBox.shrink();
                             }
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: Text(
-                                dailyStats[index].dayLabel,
-                                style: const TextStyle(fontSize: 12),
+                              if (_isLargePeriod && index % 5 != 0) {
+                                return const SizedBox.shrink();
+                              }
+                              final date = dailyStats[index].date;
+                              final label = _isLargePeriod
+                                  ? '${date.month}/${date.day}'
+                                  : dailyStats[index].dayLabel;
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: Text(
+                                  label,
+                                  style: const TextStyle(fontSize: 10),
                               ),
                             );
                           },
                         ),
                       ),
-                      leftTitles: AxisTitles(
-                        sideTitles: SideTitles(
+                      leftTitles: fl.AxisTitles(
+                        sideTitles: fl.SideTitles(
                           showTitles: true,
                           interval: 25,
                           reservedSize: 40,
                           getTitlesWidget: (value, meta) {
-                            return SideTitleWidget(
+                            return fl.SideTitleWidget(
                               meta: meta,
                               child: Text(
                                 '${value.toInt()}%',
@@ -88,15 +98,15 @@ class WeeklyBarChart extends StatelessWidget {
                           },
                         ),
                       ),
-                      topTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
+                      topTitles: const fl.AxisTitles(
+                        sideTitles: fl.SideTitles(showTitles: false),
                       ),
-                      rightTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
+                      rightTitles: const fl.AxisTitles(
+                        sideTitles: fl.SideTitles(showTitles: false),
                       ),
                     ),
-                    borderData: FlBorderData(show: false),
-                    gridData: const FlGridData(show: false),
+                    borderData: fl.FlBorderData(show: false),
+                    gridData: const fl.FlGridData(show: false),
                   ),
                 ),
               ),
