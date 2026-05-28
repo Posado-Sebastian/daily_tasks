@@ -1,3 +1,5 @@
+import '../constants.dart';
+
 class Task {
   final int? id;  
   final String title;
@@ -51,7 +53,7 @@ class Task {
       return normalizedSpecificDate == normalizedDate;
     }
 
-    final dayNames = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+    final dayNames = kWeekDays;
     final dayCode = dayNames[normalizedDate.weekday % 7];
     return days.contains(dayCode);
   }

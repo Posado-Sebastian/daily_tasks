@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'constants.dart';
 import 'db_helper.dart';
 import 'models/task.dart';
 
@@ -12,15 +13,7 @@ class BottomSheetWidget extends StatefulWidget {
 }
 
 class _BottomSheetWidgetState extends State<BottomSheetWidget> {
-  final List<String> _weekDays = const [
-    'Su',
-    'Mo',
-    'Tu',
-    'We',
-    'Th',
-    'Fr',
-    'Sa',
-  ];
+  final List<String> _weekDays = kWeekDays;
   final Set<String> _selectedDays = <String>{};
   final TextEditingController _titleController = TextEditingController();
   DateTime? _selectedDate;
