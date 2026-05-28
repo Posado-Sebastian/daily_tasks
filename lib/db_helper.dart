@@ -143,18 +143,6 @@ class DbHelper {
 		return TaskLog.fromMap(logMaps.first);
 	}
 
-	static Future<List<TaskLog>> getLogsForTask(int taskId) async {
-		final db = await openOurDatabase();
-		final logMaps = await db.query(
-			_taskLogsTable,
-			where: 'taskId = ?',
-			whereArgs: [taskId],
-			orderBy: 'date DESC',
-		);
-
-		return [for (final map in logMaps) TaskLog.fromMap(map)];
-	}
-
 	static Future<List<TaskLog>> getLogsBetweenDates(
 		DateTime start,
 		DateTime end,
