@@ -13,9 +13,9 @@ A Flutter app to manage recurring daily tasks and track your completion history.
 <p align="center">
   <img src="assets/stats.jpeg" width="250">
   &nbsp;&nbsp;&nbsp;
-  <img src="assets/manager.jpeg" width="250">
-  &nbsp;&nbsp;&nbsp;
   <img src="assets/tasks.jpeg" width="250">
+  &nbsp;&nbsp;&nbsp;
+  <img src="assets/manager.jpeg" width="250">
 </p>
 
 ## Tech stack
