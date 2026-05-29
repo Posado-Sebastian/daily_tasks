@@ -6,7 +6,7 @@ A Flutter app to manage recurring daily tasks and track your completion history.
 
 - **Today view** — see only the tasks scheduled for the current day. Check them off as you complete them.
 - **Task manager** — create, edit, and delete tasks. Assign them to specific days of the week and toggle them active/inactive.
-- **Stats view** — review your completion history the last 7 days.
+- **Stats view** — review your completion history.
 
 ## Screenshots
 
